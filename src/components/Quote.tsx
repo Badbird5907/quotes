@@ -2,6 +2,8 @@ import React, {memo} from 'react';
 import Person from "@app-types/person";
 import {Quote} from "@app-types/quotes";
 import ClientAvatar from "@components/ClientAvatar";
+import {Card, CardBody, CardFooter, CardHeader} from "@nextui-org/card";
+import {Divider} from "@nextui-org/react";
 
 interface QuoteProps {
     quote: Quote;
@@ -11,7 +13,7 @@ interface QuoteProps {
 const Quote = ({quote, person}: QuoteProps) => {
     const QuoteText = memo(function QuoteText() {
         if (typeof quote === 'string') {
-            return <span className={"text-sm text-gray-800"}>
+            return <span className={"text-sm text-white-500"}>
                 {`"${quote}"`}
             </span>;
         }
@@ -24,7 +26,7 @@ const Quote = ({quote, person}: QuoteProps) => {
             return (
                 <>
                     <ImageComponent/>
-                    <span className={"text-sm text-gray-800"}>
+                    <span className={"text-sm text-white-500"}>
                         {`"${q}"`}
                     </span>
                 </>
@@ -37,7 +39,7 @@ const Quote = ({quote, person}: QuoteProps) => {
                 {q.map((q, i) => {
                     return (
                         <>
-                            <span className={"text-sm text-gray-800"}>
+                            <span className={"text-sm text-white-500"}>
                                 {`"${q}"`}
                             </span>
                             <br/>
@@ -48,17 +50,23 @@ const Quote = ({quote, person}: QuoteProps) => {
         )
     })
     return (
-        <div className="flex items-start space-x-4">
-            <ClientAvatar showFallback name={person.name} src={person.image} className={"self-center"}/>
-            <div className="flex flex-col">
-                <div className="flex items-center">
-                    <span className="font-medium text-white-500">{person.name}</span>
+        <Card className="w-[400px] mb-4">
+            <CardHeader className="flex gap-3">
+                <ClientAvatar showFallback name={person.name} src={person.image} className={"self-center"}/>
+                <div className="flex flex-col">
+                    <p className="text-md">{person.name}</p>
+                    <p className="text-sm text-default-500">{person.description}</p>
                 </div>
-                <div className="bg-gray-200 p-3 rounded-lg mt-1">
-                    <QuoteText/>
-                </div>
-            </div>
-        </div>
+            </CardHeader>
+            <Divider/>
+            <CardBody>
+                <QuoteText/>
+            </CardBody>
+            <Divider/>
+            <CardFooter>
+
+            </CardFooter>
+        </Card>
     );
 };
 

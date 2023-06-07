@@ -9,11 +9,13 @@ export default async function Page() {
             <div className={"flex flex-col items-center"}>
                 <h1 className={"text-5xl font-bold"}>Quotes (WIP)</h1>
             </div>
-            {data?.map((quote, i) => {
-                return (
-                    <QuoteList initialData={quote} key={i}/>
-                )
-            })}
+            <div className={"pt-4"}>
+                {data?.map((quote, i) => {
+                    return (
+                        <QuoteList initialData={quote} key={i}/>
+                    )
+                })}
+            </div>
         </>
     )
 }

@@ -11,7 +11,7 @@ interface QuoteListProps {
 const QuoteList = ({initialData}: QuoteListProps) => {
     const [data, setData] = React.useState(initialData);
     return (
-        <div>
+        <div className={"flex flex-col items-center"}>
             {data.quotes.map((quote,i) => {
                 return <Quote quote={quote} person={data as Person} key={i} />
             })}
