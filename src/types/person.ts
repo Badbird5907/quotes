@@ -1,4 +1,4 @@
-export type Person = {
+export default interface Person {
     name: string;
     description: string;
     image: string;

@@ -1,5 +1,6 @@
 import {withMethods} from "@utils/server";
 import {extractPersonInfo, resolveQuotes} from "@utils/quote";
+import {debug} from "@/util/log";
 
 export default withMethods(async (req, res) => {
     const {id} = req.query;
@@ -11,9 +12,24 @@ export default withMethods(async (req, res) => {
         });
         return;
     }
+    const page = parseInt(req.query.page as string);
+    if (isNaN(page)) {
+        res.status(400).json({
+            success: false,
+            error: "Invalid page number"
+        });
+        return;
+    }
+    if (page < 1 || page > quotes.quotes.length) {
+        res.status(404).json({
+            success: false,
+            error: "Page not found"
+        });
+        return;
+    }
     res.status(200).json({
         success: true,
         ...extractPersonInfo(quotes),
-        quotes: quotes.quotes
+        quote: quotes.quotes[page - 1],
     });
 }, "GET");

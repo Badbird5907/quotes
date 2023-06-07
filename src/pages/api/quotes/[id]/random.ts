@@ -11,9 +11,10 @@ export default withMethods(async (req, res) => {
         });
         return;
     }
+    const randomIndex = Math.floor(Math.random() * quotes.quotes.length);
     res.status(200).json({
         success: true,
         ...extractPersonInfo(quotes),
-        quotes: quotes.quotes
+        quote: quotes.quotes[randomIndex]
     });
 }, "GET");
