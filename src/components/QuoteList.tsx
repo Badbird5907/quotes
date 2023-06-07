@@ -1,12 +1,15 @@
+"use client"
+
 import React from 'react';
 import {QuoteData} from "@/types/quotes";
 import Person from "@/types/person";
 import Quote from "@components/Quote";
 
 interface QuoteListProps {
-    data: QuoteData;
+    initialData: QuoteData;
 }
-const QuoteList = ({data}: QuoteListProps) => {
+const QuoteList = ({initialData}: QuoteListProps) => {
+    const [data, setData] = React.useState(initialData);
     return (
         <div>
             {data.quotes.map((quote,i) => {

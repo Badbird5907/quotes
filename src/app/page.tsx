@@ -6,10 +6,12 @@ export default async function Page() {
     const data: QuoteData[] = await getInitialData();
     return (
         <>
-            <h1 className={"text-4xl align-center justify-center"}>Quotes</h1>
+            <div className={"flex flex-col items-center"}>
+                <h1 className={"text-5xl font-bold"}>Quotes (WIP)</h1>
+            </div>
             {data?.map((quote, i) => {
                 return (
-                    <QuoteList data={quote} key={i}/>
+                    <QuoteList initialData={quote} key={i}/>
                 )
             })}
         </>
