@@ -1,5 +1,5 @@
 import {withMethods} from "@utils/server";
-import {extractPersonInfo, resolveQuotes} from "@utils/quote";
+import {ensureQuoteIsObject, extractPersonInfo, resolveQuotes} from "@utils/quote";
 import {debug} from "@/util/log";
 
 export default withMethods(async (req, res) => {
@@ -27,9 +27,11 @@ export default withMethods(async (req, res) => {
         });
         return;
     }
+    const total = quotes.quotes.length;
     res.status(200).json({
         success: true,
         ...extractPersonInfo(quotes),
-        quote: quotes.quotes[page - 1],
+        quote: ensureQuoteIsObject(quotes.quotes[page - 1], total),
+        total,
     });
 }, "GET");

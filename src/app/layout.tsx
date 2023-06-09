@@ -10,9 +10,11 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
         <html lang="en" className='dark'>
         <body>
         <Providers>
-            <Button isIconOnly variant={"faded"} className={"right-0 top-0 absolute mr-2 mt-2"} href={"https://github.com/Badbird5907/quotes"}>
-                <FaGithub />
-            </Button>
+            <a href={"https://github.com/Badbird5907/quotes/"} target={"_blank"}>
+                <Button isIconOnly variant={"faded"} className={"right-0 top-0 absolute mr-2 mt-2"}>
+                    <FaGithub />
+                </Button>
+            </a>
             {children}
             <span className={"text-gray-400 absolute right-0 bottom-0"}>Inspired by <a href={"https://quotes.basil.cafe/"} target={"_blank"} className={"hover:underline hover:decoration-dashed"}>quotes.basil.cafe</a></span>
         </Providers>

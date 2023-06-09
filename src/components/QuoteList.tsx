@@ -3,17 +3,16 @@
 import React from 'react';
 import {QuoteData} from "@/types/quotes";
 import Person from "@/types/person";
-import Quote from "@components/Quote";
+import QuoteDisplay from "@components/QuoteDisplay";
 
 interface QuoteListProps {
     initialData: QuoteData;
 }
 const QuoteList = ({initialData}: QuoteListProps) => {
-    const [data, setData] = React.useState(initialData);
     return (
         <div className={"flex flex-col items-center"}>
-            {data.quotes.map((quote,i) => {
-                return <Quote quote={quote} person={data as Person} key={i} />
+            {initialData.quotes.map((quote,i) => {
+                return <QuoteDisplay initialQuote={quote} person={initialData as Person} initialTotalQuotes={quote.total} key={i} />
             })}
         </div>
     );

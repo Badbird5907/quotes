@@ -1,6 +1,6 @@
 import {withMethods} from "@utils/server";
-import {extractPersonInfo, resolveQuotes} from "@utils/quote";
-import {quotes as allQuotes} from "@/util/quotes";
+import {ensureQuoteIsObject, extractPersonInfo, resolveQuotes} from "@utils/quote";
+import {people as allQuotes} from "@/util/people";
 
 export default withMethods(async (req, res) => {
     const randomQuote = allQuotes[Math.floor(Math.random() * allQuotes.length)];
@@ -16,6 +16,6 @@ export default withMethods(async (req, res) => {
     res.status(200).json({
         success: true,
         ...extractPersonInfo(quotes),
-        quote: quotes.quotes[randomIndex]
+        quote: ensureQuoteIsObject(quotes.quotes[randomIndex])
     });
 }, "GET");

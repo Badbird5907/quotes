@@ -1,5 +1,5 @@
 import {withMethods} from "@utils/server";
-import {extractPersonInfo, resolveQuotes} from "@utils/quote";
+import {ensureQuoteIsObject, extractPersonInfo, resolveQuotes} from "@utils/quote";
 
 export default withMethods(async (req, res) => {
     const {id} = req.query;
@@ -11,10 +11,12 @@ export default withMethods(async (req, res) => {
         });
         return;
     }
+    const total = quotes.quotes.length;
     const randomIndex = Math.floor(Math.random() * quotes.quotes.length);
     res.status(200).json({
         success: true,
         ...extractPersonInfo(quotes),
-        quote: quotes.quotes[randomIndex]
+        quote: ensureQuoteIsObject(quotes.quotes[randomIndex], total),
+        total
     });
 }, "GET");

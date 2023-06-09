@@ -1,17 +1,35 @@
-import {quotes} from "@/util/quotes";
-import {QuoteData} from "@/types/quotes";
+import {people} from "@/util/people";
+import {Quote, QuoteData, QuoteDataUnsafe} from "@/types/quotes";
 import Person from "@/types/person";
+import {debug} from "@/util/log";
 
-export async function resolveQuotes(name: string): Promise<QuoteData | null> {
-    // get from quotes/<name>.json
-    /*
-    const jsonDirectory = path.join(process.cwd(), 'quotes');
-    const fileContents = await fs.readFile(jsonDirectory + '/' + name.toLowerCase() + '.json', 'utf8');
-    return JSON.parse(fileContents) as FileData;
-     */
-    const quote = quotes.find(quote => quote.name === name.toLowerCase());
+export function ensureQuoteIsObject(quote: any, total: number = 1): Quote {
+    if (typeof quote === "string") quote = {
+        quote: quote,
+        total
+    } as Quote;
+    return {...quote, total} as Quote;
+}
+export async function resolveQuotesSafe(name: string): Promise<QuoteData | null> {
+    const quote = people.find(quote => quote.name === name.toLowerCase());
     if (quote) {
-        return quote.data as QuoteData;
+        // return quote.data as QuoteData;
+        const quoteData: any = quote.data;
+        const total = quoteData.quotes.length;
+        quoteData.quotes = quoteData.quotes.map((quote: any) => {
+            return ensureQuoteIsObject(quote, total);
+        }) as Quote[];
+        return quoteData as QuoteData;
+    } else {
+        return null;
+    }
+}
+export async function resolveQuotes(name: string): Promise<QuoteDataUnsafe | null> {
+    const quote = people.find(quote => quote.name === name.toLowerCase());
+    if (quote) {
+        // return quote.data as QuoteData;
+        const quoteData: any = quote.data;
+        return quoteData as QuoteDataUnsafe;
     } else {
         return null;
     }
@@ -27,10 +45,11 @@ export function extractPersonInfo(data: QuoteData): Person {
 export async function getInitialData(): Promise<QuoteData[]> {
     // get the first quote
     const quoteData: QuoteData[] = [];
-    for (const quote of quotes) {
-        const data = quote.data as QuoteData;
+    for (const quote of people) {
+        const data: any = {...quote.data};
+        const total = data.quotes.length;
         // only include the first quote to reduce the size of the initial data
-        data.quotes = [data.quotes[0]];
+        data.quotes = [ensureQuoteIsObject(data.quotes[0], total)];
         quoteData.push(data);
     }
     return quoteData;
