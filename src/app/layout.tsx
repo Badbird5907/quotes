@@ -23,6 +23,6 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
     );
 }
 export const metadata: Metadata = {
-    title: 'Home',
+    title: 'Quotes',
     description: 'A collection of out of context quotes from my friends.',
 };
