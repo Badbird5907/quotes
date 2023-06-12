@@ -1,7 +1,6 @@
 import {people} from "@/util/people";
 import {Quote, QuoteData, QuoteDataUnsafe} from "@/types/quotes";
 import Person from "@/types/person";
-import {debug} from "@/util/log";
 
 export function ensureQuoteIsObject(quote: any, total: number = 1): Quote {
     if (typeof quote === "string") quote = {
