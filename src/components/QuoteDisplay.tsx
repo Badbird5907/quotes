@@ -1,13 +1,12 @@
 import React, {memo, useEffect} from 'react';
 import Person from "@app-types/person";
-import {Quote} from "@app-types/quotes";
+import {Quote, QuoteData} from "@app-types/quotes";
 import ClientAvatar from "@components/ClientAvatar";
 import {Card, CardBody, CardFooter, CardHeader} from "@nextui-org/card";
 import {Divider} from "@nextui-org/react";
 import {FaChevronLeft, FaChevronRight, FaDice} from "react-icons/fa";
 import {Button} from "@nextui-org/button";
 import axios from "axios";
-import {debug} from "@/util/log";
 
 interface QuoteProps {
     initialQuote: Quote;
@@ -19,23 +18,21 @@ const QuoteDisplay = ({initialQuote, person, initialTotalQuotes}: QuoteProps) =>
     const [page, setPage] = React.useState(1);
     const [quote, setQuote] = React.useState<Quote>(initialQuote);
     const [totalQuotes, setTotalQuotes] = React.useState<number>(initialTotalQuotes || 1);
-    const [mounted, setMounted] = React.useState(false);
-
-    const query = () => {
-        const url = `/api/quotes/${person.name}/${page}`;
-        debug(`Querying ${url}`);
-        axios.get(url).then(res => {
-            setQuote(res.data.quote as Quote);
+    const [data, setData] = React.useState<QuoteData | null>(null);
+    useEffect(() => {
+        axios.get(`/api/quotes/${person.name}/get`).then(res => {
+            setData(res.data as QuoteData);
             setTotalQuotes(res.data.total);
-        });
-    }
+        })
+    }, [])
 
     useEffect(() => {
-        if (mounted) { // Check if component has mounted
-            query();
-        } else {
-            setMounted(true); // Set isMounted to true after the initial render
+        if (page === 1) {
+            setQuote(initialQuote);
+            return;
         }
+        if (!data) return;
+        setQuote(data.quotes[page - 1]);
     }, [page])
 
     const QuoteText = memo(function QuoteText() {
@@ -89,21 +86,21 @@ const QuoteDisplay = ({initialQuote, person, initialTotalQuotes}: QuoteProps) =>
             <CardFooter className="flex justify-between items-center">
                 <span className="text-gray-400 float-left">({page}/{totalQuotes || 1})</span>
                 <div className="flex justify-center">
-                    <Button isIconOnly variant="faded" className={`${page === 1 ? "hover:cursor-not-allowed" : ""}`}
-                            disabled={page === 1} onPress={() => {
-                        if (page === 1) return;
+                    <Button isIconOnly variant="faded" className={`${page === 1 || !data ? "hover:cursor-not-allowed" : ""}`}
+                            disabled={page === 1 || !data} onPress={() => {
+                        if (page === 1 || !data) return;
                         setPage(page - 1)
                     }}>
                         <FaChevronLeft />
                     </Button>
-                    <Button isIconOnly variant="faded" className="mx-4" onPress={() => {
+                    <Button isIconOnly variant="faded" className={`mx-4 ${!data ? "hover:cursor-not-allowed" : ""}`} disabled={!data} onPress={() => {
                         setPage(Math.floor(Math.random() * totalQuotes) + 1);
                     }}>
                         <FaDice />
                     </Button>
-                    <Button isIconOnly variant="faded" className={`${page === totalQuotes ? "hover:cursor-not-allowed" : ""}`}
-                            disabled={page === totalQuotes} onPress={() => {
-                        if (page === totalQuotes) return;
+                    <Button isIconOnly variant="faded" className={`${page === totalQuotes || !data ? "hover:cursor-not-allowed" : ""}`}
+                            disabled={page === totalQuotes || !data} onPress={() => {
+                        if (page === totalQuotes || !data) return;
                         setPage(page + 1)
                     }}>
                         <FaChevronRight />
