@@ -1,6 +1,6 @@
 import React, {memo, useEffect} from 'react';
 import Person from "@app-types/person";
-import {Quote, QuoteData} from "@app-types/quotes";
+import {Quote, QuoteData, RichQuoteText} from "@app-types/quotes";
 import ClientAvatar from "@components/ClientAvatar";
 import {Card, CardBody, CardFooter, CardHeader} from "@nextui-org/card";
 import {Divider} from "@nextui-org/react";
@@ -20,7 +20,7 @@ const QuoteDisplay = ({initialQuote, person, initialTotalQuotes}: QuoteProps) =>
     const [totalQuotes, setTotalQuotes] = React.useState<number>(initialTotalQuotes || 1);
     const [data, setData] = React.useState<QuoteData | null>(null);
     useEffect(() => {
-        axios.get(`/api/quotes/${person.name}/get`).then(res => {
+        axios.get(`/api/quotes/${person.name}/get`).then((res) => {
             setData(res.data as QuoteData);
             setTotalQuotes(res.data.total);
         })
@@ -42,26 +42,39 @@ const QuoteDisplay = ({initialQuote, person, initialTotalQuotes}: QuoteProps) =>
             return null;
         });
         const q = quote.quote;
+        const QuoteLine = ({line}: { line: string | RichQuoteText }) => {
+            if (typeof line === 'string') {
+                return (
+                    <span className={"text-sm text-white-500"}>
+                        {`"${line}"`}
+                    </span>
+                )
+            } else if (typeof line === 'object') {
+                const richQuote = line as RichQuoteText;
+                const display = richQuote.display; // left or right
+                return (
+                    <span className={`text-sm text-white-500 ${display === "right" ? "float-right" : ""}`}>
+                        {`"${richQuote.quote}"`}
+                    </span>
+                )
+            }
+            return null;
+        }
         if (typeof q === 'string') {
             return (
                 <>
                     <ImageComponent/>
-                    <span className={"text-sm text-white-500"}>
-                        {`"${q}"`}
-                    </span>
+                    <QuoteLine line={q}/>
                 </>
             );
         }
-        // if it's an array, we need to map it
         return (
             <>
                 <ImageComponent/>
-                {q.map((q, i) => {
+                {q?.map((q, i) => {
                     return (
                         <div key={i}>
-                            <span className={"text-sm text-white-500"}>
-                                {`"${q}"`}
-                            </span>
+                            <QuoteLine line={q}/>
                             <br/>
                         </div>
                     )
@@ -86,24 +99,27 @@ const QuoteDisplay = ({initialQuote, person, initialTotalQuotes}: QuoteProps) =>
             <CardFooter className="flex justify-between items-center">
                 <span className="text-gray-400 float-left">({page}/{totalQuotes || 1})</span>
                 <div className="flex justify-center">
-                    <Button isIconOnly variant="faded" className={`${page === 1 || !data ? "hover:cursor-not-allowed" : ""}`}
+                    <Button isIconOnly variant="faded"
+                            className={`${page === 1 || !data ? "hover:cursor-not-allowed" : ""}`}
                             disabled={page === 1 || !data} onPress={() => {
                         if (page === 1 || !data) return;
                         setPage(page - 1)
                     }}>
-                        <FaChevronLeft />
+                        <FaChevronLeft/>
                     </Button>
-                    <Button isIconOnly variant="faded" className={`mx-4 ${!data ? "hover:cursor-not-allowed" : ""}`} disabled={!data} onPress={() => {
+                    <Button isIconOnly variant="faded" className={`mx-4 ${!data ? "hover:cursor-not-allowed" : ""}`}
+                            disabled={!data} onPress={() => {
                         setPage(Math.floor(Math.random() * totalQuotes) + 1);
                     }}>
-                        <FaDice />
+                        <FaDice/>
                     </Button>
-                    <Button isIconOnly variant="faded" className={`${page === totalQuotes || !data ? "hover:cursor-not-allowed" : ""}`}
+                    <Button isIconOnly variant="faded"
+                            className={`${page === totalQuotes || !data ? "hover:cursor-not-allowed" : ""}`}
                             disabled={page === totalQuotes || !data} onPress={() => {
                         if (page === totalQuotes || !data) return;
                         setPage(page + 1)
                     }}>
-                        <FaChevronRight />
+                        <FaChevronRight/>
                     </Button>
                 </div>
             </CardFooter>

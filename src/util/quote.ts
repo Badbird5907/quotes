@@ -10,7 +10,9 @@ export function ensureQuoteIsObject(quote: any, total: number = 1): Quote {
     return {...quote, total} as Quote;
 }
 export async function resolveQuotesSafe(name: string): Promise<QuoteData | null> {
-    const quote = people.find(quote => quote.name === name.toLowerCase());
+    const quote = people.find(quote => {
+        return quote.name === name.toLowerCase() || quote.data?.name?.toLowerCase() === name.toLowerCase()
+    });
     if (quote) {
         // return quote.data as QuoteData;
         const quoteData: any = quote.data;
@@ -24,7 +26,9 @@ export async function resolveQuotesSafe(name: string): Promise<QuoteData | null>
     }
 }
 export async function resolveQuotes(name: string): Promise<QuoteDataUnsafe | null> {
-    const quote = people.find(quote => quote.name === name.toLowerCase());
+    const quote = people.find(quote => {
+        return quote.name === name.toLowerCase() || quote.data?.name?.toLowerCase() === name.toLowerCase()
+    });
     if (quote) {
         // return quote.data as QuoteData;
         const quoteData: any = quote.data;
