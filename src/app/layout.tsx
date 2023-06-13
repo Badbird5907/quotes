@@ -16,7 +16,7 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
                 </Button>
             </a>
             {children}
-            <span className={"text-gray-400 absolute right-0 bottom-0"}>Inspired by <a href={"https://quotes.basil.cafe/"} target={"_blank"} className={"hover:underline hover:decoration-dashed"}>quotes.basil.cafe</a></span>
+            <span className={"text-gray-400 bottom-0"}>Inspired by <a href={"https://quotes.basil.cafe/"} target={"_blank"} className={"hover:underline hover:decoration-dashed"}>quotes.basil.cafe</a></span>
         </Providers>
         </body>
         </html>
