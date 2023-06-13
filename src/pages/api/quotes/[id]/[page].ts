@@ -31,7 +31,7 @@ export default withMethods(async (req, res) => {
     res.status(200).json({
         success: true,
         ...extractPersonInfo(quotes),
-        quote: ensureQuoteIsObject(quotes.quotes[page - 1], total),
+        quote: ensureQuoteIsObject(quotes.quotes[page - 1]),
         total,
     });
 }, "GET");
