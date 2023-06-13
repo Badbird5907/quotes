@@ -1,13 +1,12 @@
 import {people} from "@/util/people";
-import {Quote, QuoteData, QuoteDataUnsafe} from "@/types/quotes";
+import {InitialData, Quote, QuoteData, QuoteDataUnsafe} from "@/types/quotes";
 import Person from "@/types/person";
 
-export function ensureQuoteIsObject(quote: any, total: number = 1): Quote {
+export function ensureQuoteIsObject(quote: any): Quote {
     if (typeof quote === "string") quote = {
         quote: quote,
-        total
     } as Quote;
-    return {...quote, total} as Quote;
+    return quote as Quote;
 }
 export async function resolveQuotesSafe(name: string): Promise<QuoteData | null> {
     const quote = people.find(quote => {
@@ -16,9 +15,8 @@ export async function resolveQuotesSafe(name: string): Promise<QuoteData | null>
     if (quote) {
         // return quote.data as QuoteData;
         const quoteData: any = quote.data;
-        const total = quoteData.quotes.length;
         quoteData.quotes = quoteData.quotes.map((quote: any) => {
-            return ensureQuoteIsObject(quote, total);
+            return ensureQuoteIsObject(quote);
         }) as Quote[];
         return quoteData as QuoteData;
     } else {
@@ -45,16 +43,19 @@ export function extractPersonInfo(data: QuoteData): Person {
         image: data.image
     }
 }
-export async function getInitialData(): Promise<QuoteData[]> {
+
+export async function getInitialData(): Promise<InitialData[]> {
     // get the first quote
-    const quoteData: QuoteData[] = [];
+    const quoteData: InitialData[] = [];
     for (const quote of people) {
         const data: any = {...quote.data};
         const total = data.quotes.length;
         // only include the first quote to reduce the size of the initial data
-        data.quotes = [ensureQuoteIsObject(data.quotes[0], total)];
-        quoteData.push(data);
+        data.quotes = [ensureQuoteIsObject(data.quotes[0])];
+        quoteData.push({
+            data: data as QuoteData,
+            total
+        });
     }
     return quoteData;
-
 }

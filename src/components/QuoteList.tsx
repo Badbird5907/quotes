@@ -1,19 +1,18 @@
 "use client"
 
 import React from 'react';
-import {QuoteData} from "@/types/quotes";
+import {InitialData, QuoteData} from "@/types/quotes";
 import Person from "@/types/person";
 import QuoteDisplay from "@components/QuoteDisplay";
 
 interface QuoteListProps {
-    initialData: QuoteData;
+    initialData: InitialData;
 }
 const QuoteList = ({initialData}: QuoteListProps) => {
     return (
         <div className={"flex flex-col items-center"}>
-            {initialData.quotes.map((quote,i) => {
-                return <QuoteDisplay initialQuote={quote} person={initialData as Person} initialTotalQuotes={quote.total} key={i} />
-            })}
+            <QuoteDisplay initialQuote={initialData.data.quotes[0]} // initial data only has one quote
+                                 person={initialData.data as Person} initialTotalQuotes={initialData.total} />
         </div>
     );
 };
