@@ -3,10 +3,12 @@
   "description": "Can't center a div",
   "image": "https://cdn.discordapp.com/avatars/601115358614781952/ab38a411c2e071fae2efb763c496df77.webp",
   "quotes": [
-    [
-      "Bro rate you and your girlfriend out of 20",
-      "I am an 18 and she's a solid 13"
-    ],
+    {
+      "quote": [
+        "Bro rate you and your girlfriend out of 20",
+        "I am an 18 and she's a solid 13"
+      ]
+    },
     "nope!!! no!! loud noises, **cishets, people who hate on my interests, neurotypicals**"
   ]
 }
